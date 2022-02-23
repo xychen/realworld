@@ -1,0 +1,359 @@
+syntax = "proto3";
+
+package realworld.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "realworld/api/realworld/v1;v1";
+
+service RealWorld {
+  /************* 用户相关 ************/
+  //登陆
+  rpc Login(LoginRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post: "/api/users/login",
+      body: "*",
+    };
+  };
+  //注册
+  rpc Register(RegisterRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post: "/api/users",
+      body: "*",
+    };
+  };
+  //获取当前用户
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (UserReply) {
+    option (google.api.http) = {
+      get: "/api/user",
+    };
+  };
+
+  //更新用户信息
+  rpc UpdateUser(UpdateUserRequest) returns (UserReply) {
+    option (google.api.http) = {
+      put: "/api/user",
+      body: "*"
+    };
+  };
+
+  //获取用户信息
+  rpc GetProfile(GetProfileRequest) returns (ProfileReply) {
+    option (google.api.http) = {
+      get: "/api/profiles/{username}",
+    };
+  };
+
+  //followuser
+  rpc FollowUser(FollowUserRequest) returns (ProfileReply) {
+    option (google.api.http) = {
+      post: "/api/profiles/{username}/follow",
+      body: "*",
+    };
+  };
+
+  //unfollow user
+  rpc unFollowUser(UnFollowUserRequest) returns (ProfileReply) {
+    option (google.api.http) = {
+      delete: "/api/profiles/{username}/follow",
+    };
+  };
+
+  /************ articles ************/
+
+  // 获取文章列表
+  rpc ListArticles(ListArticlesRequest) returns (ListArticlesReply) {
+    option (google.api.http) = {
+      get: "/api/articles",
+    };
+  };
+
+  // 关注的用户的文章
+  rpc FeedArticles(ListArticlesRequest) returns (ListArticlesReply) {
+    option (google.api.http) = {
+      get: "/api/articles/feed",
+    };
+  };
+
+  // 根据文章标题获取文章
+  rpc GetArticle(GetArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      get: "/api/articles/{slug}",
+    };
+  };
+
+  // 创建文章
+  rpc CreateArticle(CreateArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      post: "/api/articles",
+      body: "*"
+    };
+  };
+
+  // 更新文章
+  rpc UpdateArticle(UpdateArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      put: "/api/articles/{slug}",
+      body: "*",
+    };
+  };
+
+  // 删除文章
+  rpc DeleteArticle(DeleteArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      delete: "/api/articles/{slug}",
+    };
+  };
+
+  //收藏文章
+  rpc FavoriteArticle(FavoriteArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      post: "/api/articles/{slug}/favorite",
+      body: "*",
+    };
+  };
+
+  //取消收藏文章
+  rpc UnFavoriteArticle(UnFavoriteArticleRequest) returns (SingleArticleReply) {
+    option (google.api.http) = {
+      delete: "/api/articles/{slug}/favorite",
+    };
+  };
+
+  /*************** 评论相关 *****************/
+
+  // 添加评论
+  rpc AddCommentsToArticle(AddCommentsRequest) returns (SingleCommentReply) {
+    option (google.api.http) = {
+      post: "/api/articles/{slug}/comments",
+      body: "*",
+    };
+  };
+
+  // 获取文章下的评论
+  rpc GetCommentsFromArticle(GetCommentsFromArticleRequest) returns (MultiCommentsReply) {
+    option (google.api.http) = {
+      get: "/api/articles/{slug}/comments",
+    };
+  };
+
+  // 删除评论
+  rpc DeleteComments(DeleteCommentsRequest) returns (SingleCommentReply) {
+    option (google.api.http) = {
+      delete: "/api/articles/{slug}/comments/{id}",
+    };
+  };
+}
+
+message LoginRequest {
+
+  message User {
+    string email = 1;
+    string password = 2;
+  }
+
+  User user = 1;
+}
+
+message UpdateUserRequest {
+
+  message User {
+    string email = 1;
+    string password = 2;
+    string username = 3;
+    string bio = 4;
+    string image = 5;
+  }
+
+  User user = 1;
+}
+
+message UserReply {
+
+  message User {
+    string email = 1;
+    string token = 2;
+    string username = 3;
+    string bio = 4;
+    string image = 5;
+  }
+
+  User user = 1;
+}
+
+message GetCurrentUserRequest {}
+
+message GetProfileRequest {
+  string username = 1;
+}
+
+message RegisterRequest {
+
+  message User {
+    string username = 1;
+    string email = 2;
+    string password = 3;
+  }
+
+  User user = 1;
+}
+
+message ProfileReply {
+
+  message Profile {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  Profile profile = 1;
+}
+
+message FollowUserRequest {
+  string username = 1;
+}
+
+message UnFollowUserRequest {
+  string username = 1;
+}
+
+
+message SingleArticleReply {
+
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Article {
+    string slug = 1;
+    string title = 2;
+    string description = 3;
+    string body = 4;
+    repeated string tagList = 5;
+    string createdAt = 6;
+    string updatedAt = 7;
+    bool favorited = 8;
+    uint32 favoritesCount = 9;
+    Author author = 10;
+  }
+
+  Article article = 1;
+}
+
+message ListArticlesRequest {
+  string tag = 1;
+  string author = 2;
+  string favorited = 3;
+  uint32 limit = 4;
+  uint32 offet = 5;
+}
+
+message ListArticlesReply {
+  repeated SingleArticleReply articles = 1;
+  uint32 articlesCount = 2;
+}
+
+message GetArticleRequest {
+  string slug = 1;
+}
+
+message CreateArticleRequest {
+
+  message Article {
+    string title = 1;
+    string description = 2;
+    string body = 3;
+    repeated string tagList = 4;
+  }
+
+  Article article = 1;
+}
+
+message UpdateArticleRequest {
+
+  message Article {
+    string title = 1;
+    string description = 2;
+    string body = 3;
+  }
+
+  Article article = 1;
+  string slug = 2;
+}
+
+message DeleteArticleRequest{
+  string slug = 1;
+}
+
+message AddCommentsRequest {
+
+  message Comment {
+    string body = 1;
+  }
+
+  Comment comment = 1;
+  string slug = 2;
+}
+
+message SingleCommentReply {
+
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Comment {
+    uint32 id = 1;
+    string createdAt = 2;
+    string updatedAt = 3;
+    string body = 4;
+    Author author = 5;
+  }
+
+  Comment comment = 1;
+}
+
+//    GetCommentsFromArticleRequest) returns (MultiCommentsReply) {
+
+message GetCommentsFromArticleRequest {
+  string slug = 1;
+}
+
+message MultiCommentsReply {
+
+  message Author {
+    string username = 1;
+    string bio = 2;
+    string image = 3;
+    bool following = 4;
+  }
+
+  message Comments {
+    uint32 id = 1;
+    string createdAt = 2;
+    string updatedAt = 3;
+    string body = 4;
+    Author author = 5;
+  }
+
+  repeated Comments comments = 1;
+}
+
+
+message DeleteCommentsRequest {
+  string slug = 1;
+  uint32 id = 2;
+}
+message FavoriteArticleRequest {
+  string slug = 1;
+}
+
+message UnFavoriteArticleRequest {
+  string slug = 1;
+}
