@@ -1,0 +1,15 @@
+dbinfo:
+  - dbname: realworld
+    charset: utf8
+    maxIdleConns: 100
+    maxOpenConns: 200
+    master:
+      user: root
+      pwd: "12345678"
+      host: 127.0.0.1
+      port: 3306
+    replicas:
+      - user: root
+        pwd: "12345678"
+        host: 127.0.0.1
+        port: 3306

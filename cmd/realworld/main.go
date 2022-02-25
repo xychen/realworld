@@ -5,8 +5,6 @@ import (
 	"os"
 
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/config"
-	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
@@ -55,23 +53,25 @@ func main() {
 		"trace_id", tracing.TraceID(),
 		"span_id", tracing.SpanID(),
 	)
-	c := config.New(
-		config.WithSource(
-			file.NewSource(flagconf),
-		),
-	)
-	defer c.Close()
+	conf.ReadAllConf(flagconf)
+	//c := config.New(
+	//	config.WithSource(
+	//		file.NewSource(flagconf),
+	//	),
+	//)
+	//defer c.Close()
+	//
+	//if err := c.Load(); err != nil {
+	//	panic(err)
+	//}
+	//
+	//var bc conf.Bootstrap
+	//if err := c.Scan(&bc); err != nil {
+	//	panic(err)
+	//}
 
-	if err := c.Load(); err != nil {
-		panic(err)
-	}
-
-	var bc conf.Bootstrap
-	if err := c.Scan(&bc); err != nil {
-		panic(err)
-	}
-
-	app, cleanup, err := initApp(bc.Server, bc.Data, logger)
+	//app, cleanup, err := initApp(bc.Server, bc.Data, logger)
+	app, cleanup, err := initApp(conf.AllConf.BootstrapConf.Server, conf.AllConf.BootstrapConf.Data, logger)
 	if err != nil {
 		panic(err)
 	}

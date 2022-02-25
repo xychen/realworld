@@ -1,0 +1,34 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "realworld/internal/conf;conf";
+
+//import "google/protobuf/duration.proto";
+
+
+/****** 数据库相关 ******/
+
+
+// 数据库配置
+message DBConfs {
+  message ConnInfo {
+    string user = 1;
+    string pwd = 2;
+    string host = 3;
+    uint32 port = 4;
+  }
+
+  message DBconf {
+    string dbname = 1;
+    string charset = 2;
+    uint32 maxIdleConns = 3;
+    uint32 maxOpenConns = 4;
+    ConnInfo master = 5;
+    repeated ConnInfo replicas = 6;
+  }
+
+  repeated DBconf dbinfo = 1;
+}
+
+/****** 数据库相关 end ******/
+

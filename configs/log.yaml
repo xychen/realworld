@@ -1,0 +1,4 @@
+path: /tmp/logs/xeslog/cardcouponv2api-%Y%m%d.log
+level: info
+rotationtime: 24h
+maxage: 24h

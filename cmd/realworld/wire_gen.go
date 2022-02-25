@@ -13,23 +13,23 @@ import (
 	"realworld/internal/data"
 	"realworld/internal/server"
 	"realworld/internal/service"
+	"realworld/pkg/dbresolver"
 )
 
 // Injectors from wire.go:
 
 // initApp init kratos application.
 func initApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
+	resolver, err := dbresolver.NewResolver()
 	if err != nil {
 		return nil, nil, err
 	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
-	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewGreeterService(greeterUsecase, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
+	repo := data.NewRepo(resolver)
+	bizBiz := biz.NewBiz(repo)
+	realWorldService := service.NewRealWorldService(bizBiz)
+	httpServer := server.NewHTTPServer(confServer, realWorldService, logger)
+	grpcServer := server.NewGRPCServer(confServer, realWorldService, logger)
 	app := newApp(logger, httpServer, grpcServer)
 	return app, func() {
-		cleanup()
 	}, nil
 }

@@ -1,0 +1,11 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "realworld/internal/conf;conf";
+
+message LogConf {
+  string path = 1;
+  string level = 2;
+  string rotationtime = 3;
+  string maxage = 4;
+}

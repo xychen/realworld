@@ -3,12 +3,14 @@
 
 openapi: 3.0.3
 info:
-    title: RealWorld
+    title: RealWorld API
     version: 0.0.1
 paths:
     /api/articles:
         get:
-            summary: 获取文章列表
+            tags:
+                - RealWorld
+            description: 获取文章列表
             operationId: RealWorld_ListArticles
             parameters:
                 - name: tag
@@ -26,11 +28,13 @@ paths:
                 - name: limit
                   in: query
                   schema:
-                    type: string
+                    type: integer
+                    format: uint32
                 - name: offet
                   in: query
                   schema:
-                    type: string
+                    type: integer
+                    format: uint32
             responses:
                 "200":
                     description: OK
@@ -39,7 +43,9 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ListArticlesReply'
         post:
-            summary: 创建文章
+            tags:
+                - RealWorld
+            description: 创建文章
             operationId: RealWorld_CreateArticle
             requestBody:
                 content:
@@ -56,7 +62,9 @@ paths:
                                 $ref: '#/components/schemas/SingleArticleReply'
     /api/articles/feed:
         get:
-            summary: 关注的用户的文章
+            tags:
+                - RealWorld
+            description: 关注的用户的文章
             operationId: RealWorld_FeedArticles
             parameters:
                 - name: tag
@@ -74,11 +82,13 @@ paths:
                 - name: limit
                   in: query
                   schema:
-                    type: string
+                    type: integer
+                    format: uint32
                 - name: offet
                   in: query
                   schema:
-                    type: string
+                    type: integer
+                    format: uint32
             responses:
                 "200":
                     description: OK
@@ -88,11 +98,14 @@ paths:
                                 $ref: '#/components/schemas/ListArticlesReply'
     /api/articles/{slug}:
         get:
-            summary: 根据文章标题获取文章
+            tags:
+                - RealWorld
+            description: 根据文章标题获取文章
             operationId: RealWorld_GetArticle
             parameters:
                 - name: slug
-                  in: query
+                  in: path
+                  required: true
                   schema:
                     type: string
             responses:
@@ -103,8 +116,16 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/SingleArticleReply'
         put:
-            summary: 更新文章
+            tags:
+                - RealWorld
+            description: 更新文章
             operationId: RealWorld_UpdateArticle
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
@@ -119,11 +140,14 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/SingleArticleReply'
         delete:
-            summary: 删除文章
+            tags:
+                - RealWorld
+            description: 删除文章
             operationId: RealWorld_DeleteArticle
             parameters:
                 - name: slug
-                  in: query
+                  in: path
+                  required: true
                   schema:
                     type: string
             responses:
@@ -135,11 +159,14 @@ paths:
                                 $ref: '#/components/schemas/SingleArticleReply'
     /api/articles/{slug}/comments:
         get:
-            summary: 获取文章下的评论
+            tags:
+                - RealWorld
+            description: 获取文章下的评论
             operationId: RealWorld_GetCommentsFromArticle
             parameters:
                 - name: slug
-                  in: query
+                  in: path
+                  required: true
                   schema:
                     type: string
             responses:
@@ -150,8 +177,16 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/MultiCommentsReply'
         post:
-            summary: 添加评论
+            tags:
+                - RealWorld
+            description: 添加评论
             operationId: RealWorld_AddCommentsToArticle
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
@@ -167,17 +202,22 @@ paths:
                                 $ref: '#/components/schemas/SingleCommentReply'
     /api/articles/{slug}/comments/{id}:
         delete:
-            summary: 删除评论
+            tags:
+                - RealWorld
+            description: 删除评论
             operationId: RealWorld_DeleteComments
             parameters:
                 - name: slug
-                  in: query
+                  in: path
+                  required: true
                   schema:
                     type: string
                 - name: id
-                  in: query
+                  in: path
+                  required: true
                   schema:
-                    type: string
+                    type: integer
+                    format: uint32
             responses:
                 "200":
                     description: OK
@@ -187,8 +227,16 @@ paths:
                                 $ref: '#/components/schemas/SingleCommentReply'
     /api/articles/{slug}/favorite:
         post:
-            summary: 收藏文章
+            tags:
+                - RealWorld
+            description: 收藏文章
             operationId: RealWorld_FavoriteArticle
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
@@ -203,11 +251,14 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/SingleArticleReply'
         delete:
-            summary: 取消收藏文章
+            tags:
+                - RealWorld
+            description: 取消收藏文章
             operationId: RealWorld_UnFavoriteArticle
             parameters:
                 - name: slug
-                  in: query
+                  in: path
+                  required: true
                   schema:
                     type: string
             responses:
@@ -219,11 +270,14 @@ paths:
                                 $ref: '#/components/schemas/SingleArticleReply'
     /api/profiles/{username}:
         get:
-            summary: 获取用户信息
+            tags:
+                - RealWorld
+            description: 获取用户信息
             operationId: RealWorld_GetProfile
             parameters:
                 - name: username
-                  in: query
+                  in: path
+                  required: true
                   schema:
                     type: string
             responses:
@@ -235,8 +289,16 @@ paths:
                                 $ref: '#/components/schemas/ProfileReply'
     /api/profiles/{username}/follow:
         post:
-            summary: followuser
+            tags:
+                - RealWorld
+            description: followuser
             operationId: RealWorld_FollowUser
+            parameters:
+                - name: username
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
@@ -251,11 +313,14 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ProfileReply'
         delete:
-            summary: unfollow user
+            tags:
+                - RealWorld
+            description: unfollow user
             operationId: RealWorld_UnFollowUser
             parameters:
                 - name: username
-                  in: query
+                  in: path
+                  required: true
                   schema:
                     type: string
             responses:
@@ -267,7 +332,9 @@ paths:
                                 $ref: '#/components/schemas/ProfileReply'
     /api/user:
         get:
-            summary: 获取当前用户
+            tags:
+                - RealWorld
+            description: 获取当前用户
             operationId: RealWorld_GetCurrentUser
             responses:
                 "200":
@@ -277,7 +344,9 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/UserReply'
         put:
-            summary: 更新用户信息
+            tags:
+                - RealWorld
+            description: 更新用户信息
             operationId: RealWorld_UpdateUser
             requestBody:
                 content:
@@ -294,7 +363,9 @@ paths:
                                 $ref: '#/components/schemas/UserReply'
     /api/users:
         post:
-            summary: 注册
+            tags:
+                - RealWorld
+            description: 注册
             operationId: RealWorld_Register
             requestBody:
                 content:
@@ -311,7 +382,9 @@ paths:
                                 $ref: '#/components/schemas/UserReply'
     /api/users/login:
         post:
-            summary: 登陆
+            tags:
+                - RealWorld
+            description: 登陆
             operationId: RealWorld_Login
             requestBody:
                 content:
@@ -326,48 +399,50 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UserReply'
-    /helloworld/{name}:
-        get:
-            summary: Sends a greeting
-            operationId: Greeter_SayHello
-            parameters:
-                - name: name
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/HelloReply'
 components:
     schemas:
         AddCommentsRequest:
+            type: object
             properties:
                 comment:
-                    $ref: '#/components/schemas/Comment'
+                    $ref: '#/components/schemas/AddCommentsRequest_Comment'
                 slug:
                     type: string
+        AddCommentsRequest_Comment:
+            type: object
+            properties:
+                body:
+                    type: string
         CreateArticleRequest:
+            type: object
             properties:
                 article:
-                    $ref: '#/components/schemas/Article'
+                    $ref: '#/components/schemas/CreateArticleRequest_Article'
+        CreateArticleRequest_Article:
+            type: object
+            properties:
+                title:
+                    type: string
+                description:
+                    type: string
+                body:
+                    type: string
+                tagList:
+                    type: array
+                    items:
+                        type: string
         FavoriteArticleRequest:
+            type: object
             properties:
                 slug:
                     type: string
         FollowUserRequest:
+            type: object
             properties:
                 username:
                     type: string
-        HelloReply:
-            properties:
-                message:
-                    type: string
-            description: The response message containing the greetings
         ListArticlesReply:
+            type: object
             properties:
                 articles:
                     type: array
@@ -377,42 +452,202 @@ components:
                     type: integer
                     format: uint32
         LoginRequest:
+            type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/User'
+                    $ref: '#/components/schemas/LoginRequest_User'
+        LoginRequest_User:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
         MultiCommentsReply:
+            type: object
             properties:
                 comments:
                     type: array
                     items:
-                        $ref: '#/components/schemas/Comments'
+                        $ref: '#/components/schemas/MultiCommentsReply_Comments'
+        MultiCommentsReply_Author:
+            type: object
+            properties:
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+                following:
+                    type: boolean
+        MultiCommentsReply_Comments:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
+                body:
+                    type: string
+                author:
+                    $ref: '#/components/schemas/MultiCommentsReply_Author'
         ProfileReply:
+            type: object
             properties:
                 profile:
-                    $ref: '#/components/schemas/Profile'
+                    $ref: '#/components/schemas/ProfileReply_Profile'
+        ProfileReply_Profile:
+            type: object
+            properties:
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+                following:
+                    type: boolean
         RegisterRequest:
+            type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/User'
+                    $ref: '#/components/schemas/RegisterRequest_User'
+        RegisterRequest_User:
+            type: object
+            properties:
+                username:
+                    type: string
+                email:
+                    type: string
+                password:
+                    type: string
         SingleArticleReply:
+            type: object
             properties:
                 article:
-                    $ref: '#/components/schemas/Article'
-        SingleCommentReply:
+                    $ref: '#/components/schemas/SingleArticleReply_Article'
+        SingleArticleReply_Article:
+            type: object
             properties:
-                comment:
-                    $ref: '#/components/schemas/Comment'
-        UpdateArticleRequest:
-            properties:
-                article:
-                    $ref: '#/components/schemas/Article'
                 slug:
                     type: string
+                title:
+                    type: string
+                description:
+                    type: string
+                body:
+                    type: string
+                tagList:
+                    type: array
+                    items:
+                        type: string
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
+                favorited:
+                    type: boolean
+                favoritesCount:
+                    type: integer
+                    format: uint32
+                author:
+                    $ref: '#/components/schemas/SingleArticleReply_Author'
+        SingleArticleReply_Author:
+            type: object
+            properties:
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+                following:
+                    type: boolean
+        SingleCommentReply:
+            type: object
+            properties:
+                comment:
+                    $ref: '#/components/schemas/SingleCommentReply_Comment'
+        SingleCommentReply_Author:
+            type: object
+            properties:
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+                following:
+                    type: boolean
+        SingleCommentReply_Comment:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
+                body:
+                    type: string
+                author:
+                    $ref: '#/components/schemas/SingleCommentReply_Author'
+        UpdateArticleRequest:
+            type: object
+            properties:
+                article:
+                    $ref: '#/components/schemas/UpdateArticleRequest_Article'
+                slug:
+                    type: string
+        UpdateArticleRequest_Article:
+            type: object
+            properties:
+                title:
+                    type: string
+                description:
+                    type: string
+                body:
+                    type: string
         UpdateUserRequest:
+            type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/User'
+                    $ref: '#/components/schemas/UpdateUserRequest_User'
+        UpdateUserRequest_User:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
         UserReply:
+            type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/User'
+                    $ref: '#/components/schemas/UserReply_User'
+        UserReply_User:
+            type: object
+            properties:
+                email:
+                    type: string
+                token:
+                    type: string
+                username:
+                    type: string
+                bio:
+                    type: string
+                image:
+                    type: string
+tags:
+    - name: RealWorld

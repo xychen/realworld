@@ -51,6 +51,11 @@ build:
 generate:
 	go generate ./...
 
+
+.PHONY: run
+run:
+	make build && bin/realworld -conf configs
+
 .PHONY: all
 # generate all
 all:
