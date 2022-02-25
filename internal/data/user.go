@@ -14,8 +14,8 @@ type User struct {
 	UserName   string    `gorm:"column:username"`
 	Bio        string    `gorm:"embedded" gorm:"column:bio"`
 	Image      string    `gorm:"embedded" gorm:"column:image"`
-	CeateTime  time.Time `gorm:"primaryKey"  gorm:"column:create_time"`
-	UpdateTime time.Time `gorm:"primaryKey"  gorm:"column:update_time"`
+	CreateTime time.Time `gorm:"column:create_time"`
+	UpdateTime time.Time `gorm:"column:update_time"`
 }
 
 // CreateUser 创建用户.
@@ -26,7 +26,7 @@ func (r *repo) CreateUser(user *biz.UserEntity) (*biz.UserEntity, error) {
 		UserName:   user.UserName,
 		Bio:        user.Bio,
 		Image:      user.Image,
-		CeateTime:  time.Now(),
+		CreateTime: time.Now(),
 		UpdateTime: time.Now(),
 	}
 	result := r.DB.Table(TableUser).Create(u)
@@ -51,7 +51,7 @@ func (r *repo) GetUserByName(username string) (*biz.UserEntity, error) {
 		UserName:   u.UserName,
 		Bio:        u.Bio,
 		Image:      u.Image,
-		CeateTime:  u.CeateTime,
+		CeateTime:  u.CreateTime,
 		UpdateTime: u.UpdateTime,
 	}, nil
 }
