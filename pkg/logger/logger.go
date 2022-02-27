@@ -49,7 +49,7 @@ func (lf *LogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	for k, v := range entry.Data {
 		switch v := v.(type) {
 		case error:
-			// Otherwise errors are ignored by `encoding/json`
+			// Otherwise err_encoder are ignored by `encoding/json`
 			// https://github.com/sirupsen/logrus/issues/137
 			data[k] = v.Error()
 		default:

@@ -7,6 +7,8 @@ import (
 	realworldv1 "realworld/api/realworld/v1"
 	"realworld/internal/conf"
 	"realworld/internal/service"
+	"realworld/pkg/err_encoder"
+	"realworld/pkg/middleware"
 )
 
 // NewHTTPServer new a HTTP server.
@@ -14,7 +16,10 @@ func NewHTTPServer(c *conf.Server, realworld *service.RealWorldService, l log.Lo
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
+			middleware.Auth(),
 		),
+		//	改为自己的 error encoder
+		http.ErrorEncoder(err_encoder.ErrorEncoder),
 	}
 	if c.Http.Network != "" {
 		opts = append(opts, http.Network(c.Http.Network))

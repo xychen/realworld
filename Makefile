@@ -14,7 +14,7 @@ init:
 	go install github.com/google/gnostic/cmd/protoc-gen-openapi@v0.6.1
 
 .PHONY: errors
-# generate errors code
+# generate err_encoder code
 errors:
 	protoc --proto_path=. \
                --proto_path=./third_party \

@@ -23,6 +23,7 @@ func (s *RealWorldService) Login(ctx context.Context, req *pb.LoginRequest) (*pb
 	return &pb.UserReply{}, nil
 }
 func (s *RealWorldService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.UserReply, error) {
+	//return nil, err_encoder.NewHTTPError(200, "body", "is empty")
 	user := &biz.UserEntity{
 		Email:    req.User.Email,
 		UserName: req.User.Username,
