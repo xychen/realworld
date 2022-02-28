@@ -32,6 +32,7 @@ func ReadAllConf(confPath string) {
 		panic(err)
 	}
 
+	// @TODO 使用反射读取配置
 	//数据库配置
 	if err := c.Scan(&AllConf.DBConf); err != nil {
 		panic(err)

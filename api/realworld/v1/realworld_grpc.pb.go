@@ -335,7 +335,7 @@ func (UnimplementedRealWorldServer) mustEmbedUnimplementedRealWorldServer() {}
 
 // UnsafeRealWorldServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to RealWorldServer will
-// result in compilation err_encoder.
+// result in compilation errors.
 type UnsafeRealWorldServer interface {
 	mustEmbedUnimplementedRealWorldServer()
 }

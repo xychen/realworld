@@ -20,7 +20,7 @@ import (
 
 // initApp init kratos application.
 func initApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	resolver, err := dbresolver.NewResolver()
+	resolver, err := dbresolver.NewResolver(logger)
 	if err != nil {
 		return nil, nil, err
 	}

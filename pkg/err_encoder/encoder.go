@@ -28,7 +28,6 @@ func FromError(err error) *HTTPError {
 	if se := new(HTTPError); errors.As(err, &se) {
 		return se
 	}
-	fmt.Println(err)
 	//default
 	return &HTTPError{
 		Code: 500,

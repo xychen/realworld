@@ -1,11 +1,11 @@
 package logger
 
-/*
 import (
 	"bytes"
-	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/sirupsen/logrus"
 	"io"
 	"os"
@@ -99,13 +99,13 @@ func (l *Logger) SetOutput(writer io.Writer) *Logger {
 	return l
 }
 
-func (l *Logger) Infof(ctx context.Context, format string, args ...interface{}) {
-	l.InfoM(ctx, map[string]interface{}{
+func (l *Logger) Infof(format string, args ...interface{}) {
+	l.InfoM(map[string]interface{}{
 		"x_msg": fmt.Sprintf(format, args...),
 	})
 }
 
-func (l *Logger) InfoM(ctx context.Context, msgs map[string]interface{}) {
+func (l *Logger) InfoM(msgs map[string]interface{}) {
 	//tn := tracer.ExtractTraceNode(ctx)
 
 	//msgs["x_trace_id"] = tn.TraceId()
@@ -117,13 +117,13 @@ func (l *Logger) InfoM(ctx context.Context, msgs map[string]interface{}) {
 	//tn.IncrRpcId()
 }
 
-func (l *Logger) Errorf(ctx context.Context, format string, args ...interface{}) {
-	l.ErrorM(ctx, map[string]interface{}{
+func (l *Logger) Errorf(format string, args ...interface{}) {
+	l.ErrorM(map[string]interface{}{
 		"x_msg": fmt.Sprintf(format, args...),
 	})
 }
 
-func (l *Logger) ErrorM(ctx context.Context, msgs map[string]interface{}) {
+func (l *Logger) ErrorM(msgs map[string]interface{}) {
 	//tn := tracer.ExtractTraceNode(ctx)
 	frames, _ := json.Marshal(callFrames(15))
 
@@ -137,6 +137,26 @@ func (l *Logger) ErrorM(ctx context.Context, msgs map[string]interface{}) {
 	//tn.IncrRpcId()
 }
 
+// Log 实现 log.Logger 接口.
+func (l *Logger) Log(level log.Level, keyvals ...interface{}) error {
+	//键值对数量必须为偶数
+	if len(keyvals)%2 != 0 {
+		return errors.New("log vals illegal")
+	}
+	msg := make(map[string]interface{})
+	for i := 0; i < len(keyvals); i += 2 {
+		key := keyvals[i].(string)
+		msg[key] = keyvals[i+1]
+	}
+	switch level {
+	case log.LevelError:
+		l.ErrorM(msg)
+	default:
+		l.InfoM(msg)
+	}
+	return nil
+}
+
 var packageName string
 var once sync.Once
 
@@ -144,6 +164,7 @@ func source() string {
 	return callFrames(10)[0]
 }
 
+// callFrames 调用栈信息.
 func callFrames(maxDept int) []string {
 	var stacks []string
 	pcs := make([]uintptr, maxDept)
@@ -180,4 +201,3 @@ func getPackageName(absPath string) string {
 
 	return absPath
 }
-*/

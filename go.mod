@@ -7,6 +7,9 @@ require (
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/wire v0.5.0
+	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible // indirect
+	github.com/lestrrat-go/strftime v1.0.5 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
