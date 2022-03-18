@@ -26,7 +26,7 @@ func initApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	}
 	repo := data.NewRepo(resolver)
 	bizBiz := biz.NewBiz(repo)
-	realWorldService := service.NewRealWorldService(bizBiz)
+	realWorldService := service.NewRealWorldService(bizBiz, logger)
 	httpServer := server.NewHTTPServer(confServer, realWorldService, logger)
 	grpcServer := server.NewGRPCServer(confServer, realWorldService, logger)
 	app := newApp(logger, httpServer, grpcServer)

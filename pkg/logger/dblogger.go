@@ -31,7 +31,6 @@ func (dl *DbLogger) Trace(ctx context.Context, begin time.Time, fc func() (strin
 	})
 
 	info := []interface{}{
-		"x_msg", "",
 		"x_param", sql,
 		"x_response", string(resp),
 		"x_action", "db.trace",
@@ -39,10 +38,15 @@ func (dl *DbLogger) Trace(ctx context.Context, begin time.Time, fc func() (strin
 	}
 
 	if err != nil {
-		dl.Logger.Log(log.LevelError, info...)
+		info = append(info,
+			"x_msg", err.Error(),
+		)
+		log.WithContext(ctx, dl.Logger).Log(log.LevelError, info...)
 	} else {
-		//dl.Logger.InfoM(ctx, info)
-		dl.Logger.Log(log.LevelInfo, info...)
+		info = append(info,
+			"x_msg", "",
+		)
+		log.WithContext(ctx, dl.Logger).Log(log.LevelInfo, info...)
 	}
 }
 

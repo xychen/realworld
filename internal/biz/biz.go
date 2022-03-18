@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"context"
 	"github.com/google/wire"
 )
 
@@ -8,25 +9,25 @@ import (
 var ProviderSet = wire.NewSet(NewBiz)
 
 type Repo interface {
-	CreateUser(user *UserEntity) (*UserEntity, error)
-	GetUserByName(username string) (*UserEntity, error)
+	CreateUser(ctx context.Context, user *UserEntity) (*UserEntity, error)
+	GetUserByName(ctx context.Context, username string) (*UserEntity, error)
 }
 
 type Biz interface {
-	CreateUser(user *UserEntity) (*UserEntity, error)
-	GetUserByName(username string) (*UserEntity, error)
+	CreateUser(ctx context.Context, user *UserEntity) (*UserEntity, error)
+	GetUserByName(ctx context.Context, username string) (*UserEntity, error)
 }
 
 type biz struct {
 	repo Repo
 }
 
-func (b *biz) CreateUser(user *UserEntity) (*UserEntity, error) {
-	return b.repo.CreateUser(user)
+func (b *biz) CreateUser(ctx context.Context, user *UserEntity) (*UserEntity, error) {
+	return b.repo.CreateUser(ctx, user)
 }
 
-func (b *biz) GetUserByName(username string) (*UserEntity, error) {
-	return b.repo.GetUserByName(username)
+func (b *biz) GetUserByName(ctx context.Context, username string) (*UserEntity, error) {
+	return b.repo.GetUserByName(ctx, username)
 }
 
 func NewBiz(repo Repo) Biz {

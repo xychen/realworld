@@ -2,6 +2,7 @@ package logger
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -135,6 +136,11 @@ func (l *Logger) ErrorM(msgs map[string]interface{}) {
 	l.logger.WithFields(msgs).Error()
 
 	//tn.IncrRpcId()
+}
+
+// LogWithCtx 携带ctx的log函数.
+func (l *Logger) LogWithCtx(ctx context.Context, level log.Level, keyvals ...interface{}) error {
+	return log.WithContext(ctx, l).Log(level, keyvals)
 }
 
 // Log 实现 log.Logger 接口.

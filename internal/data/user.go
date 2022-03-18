@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"realworld/internal/biz"
 	"time"
 )
@@ -19,7 +20,7 @@ type User struct {
 }
 
 // CreateUser 创建用户.
-func (r *repo) CreateUser(user *biz.UserEntity) (*biz.UserEntity, error) {
+func (r *repo) CreateUser(ctx context.Context, user *biz.UserEntity) (*biz.UserEntity, error) {
 	u := &User{
 		Email:      user.Email,
 		Token:      user.Token,
@@ -29,7 +30,7 @@ func (r *repo) CreateUser(user *biz.UserEntity) (*biz.UserEntity, error) {
 		CreateTime: time.Now(),
 		UpdateTime: time.Now(),
 	}
-	result := r.DB.Table(TableUser).Create(u)
+	result := r.DB.WithContext(ctx).Table(TableUser).Create(u)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -38,9 +39,9 @@ func (r *repo) CreateUser(user *biz.UserEntity) (*biz.UserEntity, error) {
 }
 
 // GetUserByName 根据用户名获取用户.
-func (r *repo) GetUserByName(username string) (*biz.UserEntity, error) {
+func (r *repo) GetUserByName(ctx context.Context, username string) (*biz.UserEntity, error) {
 	u := User{}
-	result := r.DB.Table(TableUser).Where("username = ?", username).First(&u)
+	result := r.DB.WithContext(ctx).Table(TableUser).Where("username = ?", username).First(&u)
 	if result.Error != nil {
 		return nil, result.Error
 	}

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/v2/log"
 	"realworld/internal/biz"
 	"realworld/utils"
 
@@ -10,12 +11,14 @@ import (
 
 type RealWorldService struct {
 	pb.UnimplementedRealWorldServer
-	biz biz.Biz
+	biz    biz.Biz
+	logger log.Logger
 }
 
-func NewRealWorldService(biz biz.Biz) *RealWorldService {
+func NewRealWorldService(biz biz.Biz, l log.Logger) *RealWorldService {
 	return &RealWorldService{
-		biz: biz,
+		biz:    biz,
+		logger: l,
 	}
 }
 
@@ -23,13 +26,12 @@ func (s *RealWorldService) Login(ctx context.Context, req *pb.LoginRequest) (*pb
 	return &pb.UserReply{}, nil
 }
 func (s *RealWorldService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.UserReply, error) {
-	//return nil, err_encoder.NewHTTPError(200, "body", "is empty")
 	user := &biz.UserEntity{
 		Email:    req.User.Email,
 		UserName: req.User.Username,
 	}
 	user.Token = utils.MD5([]byte(req.User.Password))
-	user, err := s.biz.CreateUser(user)
+	user, err := s.biz.CreateUser(ctx, user)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +44,6 @@ func (s *RealWorldService) Register(ctx context.Context, req *pb.RegisterRequest
 			Image:    user.Image,
 		},
 	}, nil
-	return &pb.UserReply{}, nil
 }
 func (s *RealWorldService) GetCurrentUser(ctx context.Context, req *pb.GetCurrentUserRequest) (*pb.UserReply, error) {
 	return &pb.UserReply{}, nil
