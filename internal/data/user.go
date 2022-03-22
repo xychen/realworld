@@ -56,3 +56,22 @@ func (r *repo) GetUserByName(ctx context.Context, username string) (*biz.UserEnt
 		UpdateTime: u.UpdateTime,
 	}, nil
 }
+
+// GetUserByEmail 根据用户名获取用户.
+func (r *repo) GetUserByEmail(ctx context.Context, email string) (*biz.UserEntity, error) {
+	u := User{}
+	result := r.DB.WithContext(ctx).Table(TableUser).Where("email = ?", email).First(&u)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &biz.UserEntity{
+		Id:         u.Id,
+		Email:      u.Email,
+		Token:      u.Token,
+		UserName:   u.UserName,
+		Bio:        u.Bio,
+		Image:      u.Image,
+		CeateTime:  u.CreateTime,
+		UpdateTime: u.UpdateTime,
+	}, nil
+}

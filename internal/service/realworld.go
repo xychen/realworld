@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"realworld/internal/biz"
 	"realworld/utils"
@@ -23,6 +24,13 @@ func NewRealWorldService(biz biz.Biz, l log.Logger) *RealWorldService {
 }
 
 func (s *RealWorldService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.UserReply, error) {
+	info, err := s.biz.GetUserByEmail(ctx, req.User.Email)
+	if err != nil {
+		return nil, err
+	}
+	if req.User.Password != info.Token {
+		return nil, errors.New(403, "", "login failed")
+	}
 	return &pb.UserReply{}, nil
 }
 func (s *RealWorldService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.UserReply, error) {
