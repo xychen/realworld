@@ -75,3 +75,7 @@ func (r *repo) GetUserByEmail(ctx context.Context, email string) (*biz.UserEntit
 		UpdateTime: u.UpdateTime,
 	}, nil
 }
+
+func (r *repo) UpdateUserByEmail(ctx context.Context, email string, user *biz.UserEntity) (*biz.UserEntity, error) {
+	return nil, nil
+}
